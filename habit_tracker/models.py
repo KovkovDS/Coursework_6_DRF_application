@@ -8,7 +8,7 @@ class Habit(models.Model):
     name = models.CharField(max_length=200, verbose_name='Наименование привычки', blank=True, null=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Создатель привычки', blank=True, null=True)
     place = models.CharField(max_length=100, verbose_name='Место', blank=True, null=True)
-    date_completion = models.TimeField(verbose_name='Дата выполнения', blank=True, null=True)
+    date_completion = models.TimeField(verbose_name='Дата начала выполнения', blank=True, null=True)
     action = models.CharField(max_length=200, verbose_name='Действие', blank=True, null=True)
     is_pleasant = models.BooleanField(default=False, verbose_name='Приятная привычка')
     related_habit = models.ForeignKey('self', on_delete=models.SET_NULL, verbose_name='Связанная привычка',
