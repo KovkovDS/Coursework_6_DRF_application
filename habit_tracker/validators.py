@@ -1,7 +1,5 @@
 from datetime import timedelta
 from rest_framework import serializers
-from django.shortcuts import get_object_or_404
-from habit_tracker.models import Habit
 
 
 class BaseValidator:

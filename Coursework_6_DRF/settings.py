@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "habit_tracker",
     "users",
+    "rest_framework",
+    "rest_framework_simplejwt",
     "django_countries",
     "django_celery_beat",
     "corsheaders",
@@ -55,6 +57,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -71,6 +74,7 @@ TEMPLATES = [
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
+                "django.template.context_processors.debug",
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
@@ -162,3 +166,31 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework_simplejwt.authentication.JWTAuthentication",),
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.AllowAny"],
 }
+
+CSRF_TRUSTED_ORIGINS = ["http://localhost:8000", "http://127.0.0.1:8000", "https://read-and-write.example.com"]
+
+CORS_ALLOWED_ORIGINS = ["https://example.com", "https://sub.example.com", "http://localhost:8000",
+                        "http://127.0.0.1:8000"]
+
+CORS_ALLOW_ALL_ORIGINS = False
+
+CORS_ALLOW_CREDENTIALS = True
+
+CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL")
+
+CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND")
+
+CELERY_TIMEZONE = TIME_ZONE
+
+CELERY_TASK_TRACK_STARTED = True
+
+CELERY_TASK_TIME_LIMIT = 30 * 60
+
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+
+CELERY_BEAT_SCHEDULE = {
+    "send_notification": {"task": "users.tasks.send_habit_notification", "schedule": timedelta(minutes=1)}
+}
+
+BOT_TOKEN = os.getenv('TG_TOKEN_FOR_BOT')
+TG_URL = os.getenv('TG_URL_FOR_BOT')
