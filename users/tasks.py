@@ -1,86 +1,26 @@
-import smtplib
-from datetime import timedelta
+from datetime import datetime
 from celery import shared_task
-from django.core.mail import send_mail, BadHeaderError
-from django.utils import timezone
-from django.http import HttpResponse
-from HW_skypro_Django_REST_Framework.settings import EMAIL_HOST_USER
-from lms.models import Course
-from users.models import SubscriptionForCourse, User
+from users.services import send_notification
+from habit_tracker.models import Habit
 
 
 @shared_task
-def send_course_update_message(course_id):
-    """Отправляет сообщение об обновлении материалов курса."""
-
-    course = Course.objects.get(id=course_id)
-    subscriptions = SubscriptionForCourse.objects.filter(course=course_id)
-    recipient_list = [subscription.owner.email for subscription in subscriptions]
-
-    try:
-        send_mail(
-            subject="В курсе произошли изменения",
-            message=f'В курсе "{course.title}" произошли изменения',
-            from_email=EMAIL_HOST_USER,
-            recipient_list=recipient_list,
-            fail_silently=True,
-        )
-    except BadHeaderError:
-        return HttpResponse("Обнаружен недопустимый заголовок.")
-    except smtplib.SMTPException:
-        raise smtplib.SMTPException
-
-
-@shared_task
-def send_course_update_for_update_lesson_message(lesson_id):
-    """Отправляет сообщение об обновлении материалов урока курса."""
-
-    course = Course.objects.get(lessons=lesson_id)
-    subscriptions = SubscriptionForCourse.objects.filter(course=course.pk)
-    recipient_list = [subscriptions.owner.email for subscriptions in subscriptions]
-
-    try:
-        send_mail(
-            subject="В курсе произошли изменения",
-            message=f'В курсе "{course.title}" произошли изменения',
-            from_email=EMAIL_HOST_USER,
-            recipient_list=recipient_list,
-            fail_silently=True,
-        )
-    except BadHeaderError:
-        return HttpResponse("Обнаружен недопустимый заголовок.")
-    except smtplib.SMTPException:
-        raise smtplib.SMTPException
-
-
-@shared_task
-def blocking_inactive_users():
-    """Блокирует пользователей неактивных более 30 дней."""
-
-    users = User.objects.filter(is_active=True)
-    today = timezone.now()
-    for user in users:
-        if user.last_login:
-            if today - user.last_login.date() > timedelta(days=30):
-                user.is_active = False
-                user.save()
-    recipient_list = [user.email for user in User.objects.filter(groups="Администратор")]
-    try:
-        send_mail(
-            subject="Отключение не активных пользователей",
-            message=f"Отключены пользователи: {', '.join(users.email)}.",
-            from_email=EMAIL_HOST_USER,
-            recipient_list=recipient_list,
-            fail_silently=True,
-        )
-    except BadHeaderError:
-        return HttpResponse("Обнаружен недопустимый заголовок.")
-    except smtplib.SMTPException:
-        raise smtplib.SMTPException
-    print(f"Отключены пользователи: {', '.join(users.email)}.")
-
-
-@shared_task
-def test_task(a, b):
-    result = a + b
-    print(result)
+def send_habit_notification():
+    """ Отправляет уведомление о выполнении привычке """
+    hour_now = datetime.now().hour
+    minute_now = datetime.now().minute
+    habits = Habit.objects.filter(date_completion__hour=hour_now, date_completion__minute=minute_now)
+    for habit in habits:
+        reward_or_related_habit = habit.award if habit.award else (
+            habit.related_habit.name if habit.related_habit else "Никакого вознаграждения или связанной с ним привычки")
+        message = f'''Дружеское напоминание.
+    Ваша привычка {habit.name}:
+    Действие: {habit.action},
+    Место: {habit.place},
+    Время: {habit.date_completion}
+    Награда или приятная привычка: {reward_or_related_habit}
+    Время выполнения: {habit.execution_time}
+Удачи!'''
+        send_notification(message, habit.owner.tg_chat_id)
+        print(f'{habit.owner} - {habit.action} - {habit.place} отправить '
+              f'{habit.owner} ({habit.owner.telegram_nickname})')
