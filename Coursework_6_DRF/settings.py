@@ -167,10 +167,10 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.AllowAny"],
 }
 
-CSRF_TRUSTED_ORIGINS = ["http://localhost:8000", "http://127.0.0.1:8000", "https://read-and-write.example.com"]
+CSRF_TRUSTED_ORIGINS = ["http://localhost:8000", "http://127.0.0.1:8000", "https://read-and-write.example.com", "http://158.160.91.64:8000"]
 
 CORS_ALLOWED_ORIGINS = ["https://example.com", "https://sub.example.com", "http://localhost:8000",
-                        "http://127.0.0.1:8000"]
+                        "http://127.0.0.1:8000", "http://158.160.91.64:8000"]
 
 CORS_ALLOW_ALL_ORIGINS = False
 
