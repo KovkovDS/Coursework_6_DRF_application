@@ -92,7 +92,6 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
           cd ${{ secrets.DEPLOY_DIR }}
-          git checkout HW_lesson_35_2_task2
           git pull
           sudo echo "${{ secrets.ENV_FILE }}" >> .env
           ls -la
