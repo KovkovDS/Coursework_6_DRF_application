@@ -92,6 +92,7 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
           cd ${{ secrets.DEPLOY_DIR }}
+          git checkout Coursework_7_CI-CD_task_2_adding_ci/cd
           git pull
           sudo echo "${{ secrets.ENV_FILE }}" >> .env
           ls -la
