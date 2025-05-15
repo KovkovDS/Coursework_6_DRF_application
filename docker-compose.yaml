@@ -13,7 +13,7 @@ services:
       - |
         python manage.py collectstatic --noinput
         python manage.py migrate
-        python manage.py createadmin
+        python manage.py csu
         gunicorn Coursework_6_DRF.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - .:/app
@@ -29,7 +29,6 @@ services:
   nginx:
     build:
       context: ./nginx
-      dockerfile: Dockerfile
     ports:
       - "80:80"
     volumes:
@@ -49,6 +48,8 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+    expose:
+      - "5432"
 
   redis:
     image: redis:latest
