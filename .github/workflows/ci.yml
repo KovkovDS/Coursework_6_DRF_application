@@ -92,13 +92,16 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
           cd ${{ secrets.DEPLOY_DIR }}
-          git checkout Coursework_7_CI-CD_task_2_adding_ci/cd
-          git pull
+          if [ ! -f docker-compose.yaml ]; then
+          echo "Error: docker-compose.yml not found!"
+          exit 1
+          fi
+          docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/habit_tracker:${{ github.sha }}
           sudo echo "${{ secrets.ENV_FILE }}" >> .env
           ls -la
           docker compose down || true
-          docker stop $(docker ps -a -q) || true
-          docker rm $(docker ps -qa) || true
-          docker-compose up -d --build
+          docker stop $(docker ps -q) 2>/dev/null || echo "Нет запущенных контейнеров" || true
+          docker rm $(docker ps -qa) 2>/dev/null || echo "Нет контейнеров для удаления" || true
+          docker compose up -d --build
           EOF
 
