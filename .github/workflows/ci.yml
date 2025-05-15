@@ -105,7 +105,6 @@ jobs:
           scp -o StrictHostKeyChecking=no \
               -r .github \
               -r nginx \
-              -r Coursework_6_DRF \
               -r habit_tracker \
               -r users \
               ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.DEPLOY_DIR }}/
