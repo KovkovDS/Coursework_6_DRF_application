@@ -99,6 +99,8 @@ jobs:
           scp -o StrictHostKeyChecking=no \
               docker-compose.yaml \
               Dockerfile \
+              pyproject.toml \
+              poetry.lock \
               ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.DEPLOY_DIR }}/
 
       - name: Deploy to server
