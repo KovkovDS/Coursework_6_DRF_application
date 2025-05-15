@@ -104,6 +104,9 @@ jobs:
               ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.DEPLOY_DIR }}/
           scp -o StrictHostKeyChecking=no \
               -r nginx \
+              -r Coursework_6_DRF \
+              -r habit_tracker \
+              -r users \
               ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.DEPLOY_DIR }}/
 
       - name: Deploy to server
