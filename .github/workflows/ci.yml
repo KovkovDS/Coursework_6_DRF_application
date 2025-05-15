@@ -110,6 +110,11 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
           docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/habit_tracker:${{ github.sha }}
+          cd ${{ secrets.DEPLOY_DIR }}
+          if [ ! -f docker-compose.yaml ]; then
+          echo "Error: docker-compose.yml not found!"
+          exit 1
+          fi
           sudo echo "${{ secrets.ENV_FILE }}" >> .env
           ls -la
           docker compose down || true
