@@ -88,6 +88,12 @@ jobs:
           chmod 755 ~/.ssh/id_ed25519
           ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Verify local files
+        run: ls -la  # Проверим какие файлы доступны,
+
       - name: Copy files to server
         run: |
           scp -o StrictHostKeyChecking=no \
@@ -95,6 +101,12 @@ jobs:
               Dockerfile \
               pyproject.toml \
               poetry.lock \
+              ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.DEPLOY_DIR }}/
+          scp -o StrictHostKeyChecking=no \
+              -r nginx \
+              -r Coursework_6_DRF \
+              -r habit_tracker \
+              -r users \
               ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.DEPLOY_DIR }}/
 
       - name: Deploy to server
