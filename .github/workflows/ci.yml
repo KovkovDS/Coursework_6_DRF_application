@@ -96,7 +96,7 @@ jobs:
           sudo echo "${{ secrets.ENV_FILE }}" >> .env
           ls -la
           docker compose down || true
-          docker stop $(docker ps -a -q) || true
+          docker stop $(docker ps -q) 2>/dev/null || echo "Нет запущенных контейнеров" || true
           docker rm $(docker ps -qa) || true
           docker-compose up -d --build
           EOF
