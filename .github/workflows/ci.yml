@@ -92,7 +92,7 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
           cd ${{ secrets.DEPLOY_DIR }}
-          if [ ! -f docker-compose.yml ]; then
+          if [ ! -f docker-compose.yaml ]; then
           echo "Error: docker-compose.yml not found!"
           exit 1
           fi
