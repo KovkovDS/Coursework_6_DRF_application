@@ -60,19 +60,18 @@ class User(AbstractUser):
         validators=[
             RegexValidator(
                 regex=r'^@[A-Za-z0-9_]{4,31}$',
-                message='Telegram nickname should start with @ and contain only letters, numbers and underscores. \
-                    Length: 5-32 characters.',
+                message='Никнейм в Telegram должен начинаться с @ и содержать только буквы, цифры и символы подчеркивания. \
+                    Длина: 5-32 символа.',
                 code='invalid_telegram_nickname'
             )
         ],
-        verbose_name='Имя пользователя',
+        verbose_name='Имя пользователя в Telegram',
         blank=True,
         null=True
     )
     tg_chat_id = models.CharField(
         max_length=50,
-        verbose_name='Chat id',
-        help_text='Please enter your chat id',
+        verbose_name='Chat id Telegram',
         blank=True,
         null=True
     )
