@@ -105,8 +105,8 @@ jobs:
 #          docker compose -f docker-compose.yaml up -d --build
 #          EOF
            ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-           docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
-           docker stop myapp  true
-           docker rm myapp  true
-           docker run -d --name myapp -p 80:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+           docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/habit_tracker:${{ github.sha }}
+           docker stop habit_tracker  true
+           docker rm habit_tracker  true
+           docker run -d --name habit_tracker -p 80:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/habit_tracker:${{ github.sha }}
            EOF
