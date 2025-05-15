@@ -101,6 +101,7 @@ jobs:
               Dockerfile \
               pyproject.toml \
               poetry.lock \
+              nginx \
               ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.DEPLOY_DIR }}/
 
       - name: Deploy to server
