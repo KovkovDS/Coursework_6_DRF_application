@@ -103,10 +103,8 @@ jobs:
               poetry.lock \
               ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.DEPLOY_DIR }}/
           scp -o StrictHostKeyChecking=no \
-              -r .github \
               -r nginx \
               -r habit_tracker \
-              -r users \
               ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.DEPLOY_DIR }}/
 
       - name: Deploy to server
