@@ -90,18 +90,23 @@ jobs:
 
       - name: Deploy to server
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-          cd ${{ secrets.DEPLOY_DIR }}
-          docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/habit_tracker:${{ github.sha }}
-          if [ ! -f docker-compose.yaml ]; then
-          echo "Error: docker-compose.yml not found!"
-          exit 1
-          fi
-          sudo echo "${{ secrets.ENV_FILE }}" >> .env
-          ls -la
-          docker compose down || true
-          docker stop $(docker ps -q) 2>/dev/null || echo "Нет запущенных контейнеров" || true
-          docker rm $(docker ps -qa) 2>/dev/null || echo "Нет контейнеров для удаления" || true
-          docker compose -f docker-compose.yaml up -d --build
-          EOF
-
+#          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+#          cd ${{ secrets.DEPLOY_DIR }}
+#          docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/habit_tracker:${{ github.sha }}
+#          if [ ! -f docker-compose.yaml ]; then
+#          echo "Error: docker-compose.yml not found!"
+#          exit 1
+#          fi
+#          sudo echo "${{ secrets.ENV_FILE }}" >> .env
+#          ls -la
+#          docker compose down || true
+#          docker stop $(docker ps -q) 2>/dev/null || echo "Нет запущенных контейнеров" || true
+#          docker rm $(docker ps -qa) 2>/dev/null || echo "Нет контейнеров для удаления" || true
+#          docker compose -f docker-compose.yaml up -d --build
+#          EOF
+           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+           docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+           docker stop myapp  true
+           docker rm myapp  true
+           docker run -d --name myapp -p 80:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+           EOF
