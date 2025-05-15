@@ -91,7 +91,7 @@ jobs:
       - name: Deploy to server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ sec
-          git checkout Coursework_7_task3_deploy
+          git checkout main
           git pull
           sudo echo "${{ secrets.ENV_FILE }}" >> .env
           ls -la
