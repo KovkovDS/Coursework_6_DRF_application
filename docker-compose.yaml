@@ -13,7 +13,7 @@ services:
       - |
         python manage.py collectstatic --noinput
         python manage.py migrate
-        python manage.py createadmin
+        python manage.py csu
         gunicorn Coursework_6_DRF.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - .:/app
