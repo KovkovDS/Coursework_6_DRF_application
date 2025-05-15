@@ -90,9 +90,10 @@ jobs:
 
       - name: Deploy to server
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ sec
-          git checkout main
-          git pull
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+          cd ${{ secrets.DEPLOY_DIR }}
+          sudo git init
+          git pull https://github.com/KovkovDS/Coursework_6_DRF_application
           sudo echo "${{ secrets.ENV_FILE }}" >> .env
           ls -la
           docker compose down || true
@@ -100,3 +101,4 @@ jobs:
           docker rm $(docker ps -qa) 2>/dev/null || echo "Нет контейнеров для удаления" || true
           docker compose -f docker-compose.yaml up -d --build
           EOF
+
